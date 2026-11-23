@@ -6,3 +6,21 @@
 # [[edge_functions]]
 #   function = "access-gate"
 #   path = "/*"
+
+[[redirects]]
+  from = "/api/content"
+  to = "https://cnn-news-live.netlify.app/api/content"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/peak"
+  to = "https://cnn-news-live.netlify.app/api/peak"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/subscribe"
+  to = "https://cnn-news-live.netlify.app/api/subscribe"
+  status = 200
+  force = true
