@@ -59,12 +59,13 @@ function getCookie(req, name) {
 }
 
 export default async function accessGate(request, context) {
+  // Disabled by default: enable only after configuring SECURITY_SESSION_SECRET and auth flow.
+  const enabled = Deno.env.get('SECURITY_EDGE_GATE_ENABLED') === '1';
+  if (!enabled) return context.next();
+
   const ua = request.headers.get('user-agent') || '';
   for (const p of DENIED_UA_PATTERNS) if (p.test(ua)) return deny();
 
-  const url = new URL(request.url);
-  // Allow security login endpoint only if you deploy a matching auth service; static deploy has no server-side login.
-  // For static Netlify deploy, protect via Netlify Access Control / password protection or external auth.
   const secret = Deno.env.get('SECURITY_SESSION_SECRET') || '';
   if (!secret) return deny();
 
@@ -75,4 +76,5 @@ export default async function accessGate(request, context) {
   return context.next();
 }
 
-export const config = { path: '/*' };
+// Disabled route. Set SECURITY_EDGE_GATE_ENABLED=1 and restore path to '/*' when ready.
+export const config = { path: '/__security_gate_disabled__' };
