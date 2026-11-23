@@ -1,0 +1,7 @@
+[build]
+  publish = "mirror/edition.cnn.com"
+
+# Edge function applies to all routes in production. Configure env vars in Netlify UI.
+[[edge_functions]]
+  function = "access-gate"
+  path = "/*"

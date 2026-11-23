@@ -1,0 +1,51 @@
+<svg width="656" height="718" viewBox="0 0 656 718" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Title bar: width 179->328, height/y same proportional scale -->
+<g opacity="0.5">
+  <rect y="2" width="328" height="16" rx="4" fill="#B1B1B1"/>
+</g>
+<!-- Image box: width 358->656, height 200->369 -->
+<g opacity="0.4">
+  <rect y="32" width="656" height="369" rx="4" fill="#B1B1B1"/>
+</g>
+<!-- Row 1: originally y=244, shifted down by 169 -> y=413 -->
+<g opacity="0.4">
+  <mask id="path-3-inside-1_3417_2053" fill="white">
+    <path d="M0 413H656V461H0V413Z"/>
+  </mask>
+  <path d="M656 461V460H0V461V462H656V461Z" fill="#B1B1B1" mask="url(#path-3-inside-1_3417_2053)"/>
+  <rect y="413" width="656" height="12" rx="4" fill="#B1B1B1"/>
+  <rect y="433" width="117" height="12" rx="4" fill="#B1B1B1"/>
+</g>
+<!-- Row 2: originally y=304, shifted -> y=473 -->
+<g opacity="0.4">
+  <mask id="path-7-inside-2_3417_2053" fill="white">
+    <path d="M0 473H656V521H0V473Z"/>
+  </mask>
+  <path d="M656 521V520H0V521V522H656V521Z" fill="#B1B1B1" mask="url(#path-7-inside-2_3417_2053)"/>
+  <rect y="473" width="656" height="12" rx="4" fill="#B1B1B1"/>
+  <rect y="493" width="117" height="12" rx="4" fill="#B1B1B1"/>
+</g>
+<!-- Row 3: originally y=364, shifted -> y=533 -->
+<g opacity="0.4">
+  <mask id="path-11-inside-3_3417_2053" fill="white">
+    <path d="M0 533H656V581H0V533Z"/>
+  </mask>
+  <path d="M656 581V580H0V581V582H656V581Z" fill="#B1B1B1" mask="url(#path-11-inside-3_3417_2053)"/>
+  <rect y="533" width="656" height="12" rx="4" fill="#B1B1B1"/>
+  <rect y="553" width="117" height="12" rx="4" fill="#B1B1B1"/>
+</g>
+<!-- Row 4: originally y=424, shifted -> y=593 -->
+<g opacity="0.4">
+  <mask id="path-15-inside-4_3417_2053" fill="white">
+    <path d="M0 593H656V641H0V593Z"/>
+  </mask>
+  <path d="M656 641V640H0V641V642H656V641Z" fill="#B1B1B1" mask="url(#path-15-inside-4_3417_2053)"/>
+  <rect y="593" width="656" height="12" rx="4" fill="#B1B1B1"/>
+  <rect y="613" width="117" height="12" rx="4" fill="#B1B1B1"/>
+</g>
+<!-- Row 5: originally y=484, shifted -> y=653 -->
+<g opacity="0.4">
+  <rect y="653" width="656" height="12" rx="4" fill="#B1B1B1"/>
+  <rect y="673" width="117" height="12" rx="4" fill="#B1B1B1"/>
+</g>
+</svg>
