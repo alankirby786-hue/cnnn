@@ -108,7 +108,7 @@
         var previous = LAST_APPLIED || normalize(null);
         CURRENT = next;
         if (signature(next) !== signature(previous)) {
-          applyAll(document, next, previous);
+          applyAll(document, next, previous, true);
           LAST_APPLIED = next;
           document.dispatchEvent(new CustomEvent('cnn-sanity:changed', {
             detail: { previous: previous, content: next }
@@ -141,7 +141,23 @@
     node.style.display = shouldHide ? 'none' : '';
   }
 
-  function applyBindings(root, content) {
+  function renderText(text, rules, bindingKey) {
+    var output = String(text || '');
+    (rules || []).forEach(function (rule) {
+      if (bindingKey) {
+        var leaf = String(rule.path || '').split('.').pop();
+        if (leaf === bindingKey) return;
+      }
+      if (output.indexOf(rule.from) === -1) return;
+      var pattern = new RegExp(escapeRegExp(rule.from), 'gi');
+      output = output.replace(pattern, function (match) {
+        return rule.exact ? rule.to : caseLike(match, rule.to);
+      });
+    });
+    return output;
+  }
+
+  function applyBindings(root, content, rules) {
     if (!root || !root.querySelectorAll) return;
 
     var bound = root.querySelectorAll('[data-sanity]');
@@ -149,6 +165,7 @@
       var key = node.getAttribute('data-sanity');
       var value = getPath(content, key);
       var text = value === undefined || value === null ? '' : String(value);
+      text = renderText(text, rules, key);
       var template = node.getAttribute('data-sanity-template') || '{{value}}';
       var output = template.replace(/\{\{\s*value\s*\}\}/g, text);
       var attribute = node.getAttribute('data-sanity-attr');
@@ -167,7 +184,7 @@
     });
 
     if (document.body && document.body.hasAttribute('data-sanity-document-title')) {
-      document.title = content.headline ? 'CNN — ' + content.headline : document.title;
+      document.title = content.headline ? 'CNN — ' + renderText(content.headline, rules, 'headline') : document.title;
     }
   }
 
@@ -215,7 +232,7 @@
     }
   }
 
-  function rulesBetween(previous, current) {
+  function rulesBetween(previous, current, exact) {
     var from = {};
     var to = {};
     flattenStrings(previous || {}, '', from);
@@ -231,15 +248,13 @@
       var key = before + '\u0000' + after;
       if (seen[key]) return;
       seen[key] = true;
-      rules.push({ from: before, to: after });
+      rules.push({ path: path, from: before, to: after, exact: !!exact });
     });
     return rules;
   }
 
-  function applyText(root, content, previous) {
-    if (!root) return;
-    var rules = rulesBetween(previous || FALLBACK, content);
-    if (!rules.length) return;
+  function applyTextRules(root, rules) {
+    if (!root || !rules || !rules.length) return;
 
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (node) {
@@ -257,20 +272,20 @@
     while (walker.nextNode()) nodes.push(walker.currentNode);
 
     nodes.forEach(function (node) {
-      var text = node.nodeValue;
-      rules.forEach(function (rule) {
-        if (text.indexOf(rule.from) === -1) return;
-        var pattern = new RegExp(escapeRegExp(rule.from), 'gi');
-        text = text.replace(pattern, function (match) { return caseLike(match, rule.to); });
-      });
+      var text = renderText(node.nodeValue, rules);
       if (text !== node.nodeValue) node.nodeValue = text;
     });
   }
 
-  function applyAll(root, content, previous) {
+  function applyText(root, content, previous, exact) {
+    applyTextRules(root, rulesBetween(previous || FALLBACK, content, exact));
+  }
+
+  function applyAll(root, content, previous, exact) {
     var resolved = normalize(content || CURRENT || FALLBACK);
-    applyText(root, resolved, previous || FALLBACK);
-    applyBindings(root, resolved);
+    var rules = rulesBetween(previous || FALLBACK, resolved, exact);
+    applyTextRules(root, rules);
+    applyBindings(root, resolved, rules);
     return resolved;
   }
 
@@ -357,7 +372,7 @@
     if (!hasTargets) return;
 
     load().then(function (content) {
-      applyAll(document, content);
+      applyAll(document, content, FALLBACK, true);
       LAST_APPLIED = content;
       document.dispatchEvent(new CustomEvent('cnn-sanity:ready', { detail: content }));
       startPolling();

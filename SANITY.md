@@ -71,4 +71,4 @@ Edit the **CNN Report Story** document. The key fields are:
 - `advisorName`, `firmName`, `lossesShort`, `lossesLong` — repeated across visible story copy;
 - `location` — leave empty to hide location labels and separators.
 
-The renderer overlays these values onto the existing `/api/content` feed, then replaces remaining visible occurrences on the mirrored pages. Video sources and playback behavior are not touched.
+The homepage article card headline/dek are bound to the same document, and its link already points to `/markets/edward-jones-louisiana-investigation/`. Values such as `firmName`, `advisorName`, and loss figures are substituted everywhere they appear, including inside the bound homepage headline and article copy. The renderer overlays these values onto the existing `/api/content` feed, then replaces remaining visible occurrences on the mirrored pages. Video sources and playback behavior are not touched.
