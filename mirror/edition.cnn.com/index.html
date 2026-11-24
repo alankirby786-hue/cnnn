@@ -43,6 +43,7 @@
     var card = el && el.closest ? el.closest('[data-internal-link="' + ARTICLE + '"]') : null;
     if(isArticle(href) || card){
       var dest = location.origin + ARTICLE;
+      document.querySelectorAll('video').forEach(function(v){ try { v.setAttribute('data-cnn-stop-for-nav','1'); v.pause(); v.currentTime = 0; } catch(e){} });
       e.preventDefault();
       e.stopImmediatePropagation();
       if(location.pathname.replace(/\/+$/,'') !== ARTICLE) location.href = dest;
@@ -964,6 +965,7 @@ window.homepageAutoRefresh=Object.assign(window.homepageAutoRefresh || {}, {
 body{padding-top:0!important;margin-top:0!important}
 .header__wrapper-outer{top:0!important;margin-top:0!important}
 </style>
+<link id="CNN_PREMIUM_PLAYER_CSS" rel="stylesheet" href="/media/sites/js/cnn-premium-player.css">
 </head>
   <body class="layout layout-homepage cnn" data-page-type="section">
     <header class="header__wrapper-outer">
@@ -6208,7 +6210,6 @@ data-component-name="container">
      
      data-page="cms.cnn.com/_pages/clnke3oic000047ovefui0fqm@published"
      data-editable="settings"
-     data-video-resource-parent-uri="cms.cnn.com/_components/video-resource/instances/clnm1qpgd00003b6irfa0z60h@published"
      
      
      data-section="homepage"
@@ -6233,137 +6234,10 @@ data-component-name="container">
 
 
 
-<div data-uri="cms.cnn.com/_components/video-resource/instances/cmtsbfxga00033b6rsfxwwu6d@published"
-  data-component-name="video-resource"
-  data-editable="settings"
-  class="video-resource"
-  data-fixed-ratio="16x9"
-  data-canonical-url-path=""
-  data-auth-type=""
-  data-card-url="https://www.cnn.com/videos/fast/cnni-fast"
-  data-parent-uri="cms.cnn.com/_components/video-resource/instances/clnm1qpgd00003b6irfa0z60h@published"
-  data-video-id="livedbcedb554833b248c3ce8374acd2bbcd3983d7dd"
-  data-media-id="livedbcedb554833b248c3ce8374acd2bbcd3983d7dd"
-  data-bolt-id="c49eb243-e3b6-5785-8b4b-14d0416c834a"
-  data-live=""
-  data-analytics-aggregate-events="true"
-  data-custom-experience=""
-  data-asset-type="hlsTs"
-  data-content-type="channel"
-  data-medium-env=""
-  data-autostart="muted"
-  data-show-ads="true"
-  data-source="CNN"
-  data-featured-video="true"
-  data-headline="Catch up on today&#x27;s global news"
-  data-has-video-player="true"
-  data-description="&lt;p&gt;CNN Headlines International is a curated channel covering major news events across politics, international, business, and sport, and showcasing the most impactful stories of the day.&lt;/p&gt;"
-  data-duration=""
-  data-source-html="<span class=&quot;video-resource__source&quot;> • Source:
-                
-                    <a target=&quot;_self&quot; href=&quot;https://www.cnn.com/&quot; class=&quot;video-resource__source-url&quot;>CNN</a>
-        </span>"
-  data-fave-thumbnails="{&quot;big&quot;: { &quot;uri&quot;: &quot;https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c&#x3D;16x9&amp;q&#x3D;h_540,w_960,c_fill&quot; }, &quot;small&quot;: { &quot;uri&quot;: &quot;https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c&#x3D;16x9&amp;q&#x3D;h_540,w_960,c_fill&quot; }  }"
-  data-vr-video="false"
-  data-show-html="<!-- unable to render partial show without a supplied context -->"
-  data-byline-html="<div
-  data-uri=&quot;cms.cnn.com/_components/byline/instances/clnm1qpnk00053b6iy89y3nbx@published&quot;
-  data-component-name=&quot;byline&quot;
-  class=&quot;vossi-byline byline&quot;
-  data-editable=&quot;settings&quot;
->
-        <div class=&quot;vossi-byline__images byline__images&quot;>
+<div class="cnn-top-video-holder" data-cnn-top-video="1" style="width:100%;">
+        <div style="position:relative;height:0;padding-bottom:56.25%;background:#000;overflow:hidden;">
+                <video class="cnn-top-video" src="/media/iranian-hackers-banks.mp4" autoplay loop playsinline webkit-playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;"></video>
         </div>
-        <div class=&quot;vossi-byline__names byline__names&quot;>
-          By <span class=&quot;byline__name vossi-byline__name&quot;>CNN Staff</span>
-        </div>
-</div>"
-  data-timestamp-html="<!-- unable to render partial timestamp without a supplied context -->"
-  data-check-event-based-preview=""
-  data-is-vertical-video-embed="false"
-  data-network-id=""
-  data-publish-date="2023-10-11T17:50:21.000Z"
-  data-video-section="homepage"
-  data-canonical-url="https://www.cnn.com/videos/fast/cnni-fast"
-  data-branding-key=""
-  data-video-slug="cnn-fast-international"
-  data-first-publish-slug="cnn-fast-international"
-  data-video-tags=""
-  data-breakpoints='{"video-resource--media-extra-large": 660}'
-  data-display-video-cover=""
-
-  data-unselectable="true"
-  data-details="">
-                    
-
-
-<div
-    data-uri="cms.cnn.com/_components/video-player/instances/clnm1qpgd00003b6irfa0z60h@published"
-
-    data-unselectable="true"
-    data-title=""
-    data-card-url="https://www.cnn.com/videos/fast/cnni-fast"
-    data-show-ads="true"
-    data-is-vertical-video-embed="false"
-    data-custom-experience=""
-    data-component-name="video-player"
-    data-autostart="muted"
-    data-is-vertical-video=""
-    data-fixed-ratio="16x9"
-    data-headline="Catch up on today&#x27;s global news"
-    data-auth-type=""
-    data-video-resource-parent-uri="cms.cnn.com/_components/video-resource/instances/clnm1qpgd00003b6irfa0z60h@published"
-    data-live=""
-    data-content-type="channel"
-    data-video-resource-uri="cms.cnn.com/_components/video-resource/instances/cmtsbfxga00033b6rsfxwwu6d@published"
-    data-poster-image-override="{&quot;big&quot;: { &quot;uri&quot;: &quot;https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c&#x3D;16x9&amp;q&#x3D;h_540,w_960,c_fill&quot; }, &quot;small&quot;: { &quot;uri&quot;: &quot;https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c&#x3D;16x9&amp;q&#x3D;h_540,w_960,c_fill&quot; }  }"
-    data-video-id="livedbcedb554833b248c3ce8374acd2bbcd3983d7dd"
-    data-media-id="livedbcedb554833b248c3ce8374acd2bbcd3983d7dd"
-    data-bolt-id="c49eb243-e3b6-5785-8b4b-14d0416c834a"
-    data-duration=""
-    data-description="&lt;p&gt;CNN Headlines International is a curated channel covering major news events across politics, international, business, and sport, and showcasing the most impactful stories of the day.&lt;/p&gt;"
-    data-check-event-based-preview=""
-    data-network-id=""
-    data-publish-date="2023-10-11T17:50:21.000Z"
-    data-video-section="homepage"
-    data-canonical-url="https://www.cnn.com/videos/fast/cnni-fast"
-    data-branding-key=""
-    data-video-slug="cnn-fast-international"
-    data-first-publish-slug="cnn-fast-international"
-    data-video-tags=""
-    
-    class="video-resource">
-
-    <div id="player-cms.cnn.com/_components/video-player/instances/clnm1qpgd00003b6irfa0z60h@published" class="video-resource__wrapper" >
-        <div class="video-resource__image">
-                <div
-  data-uri="cms.cnn.com/_components/image/instances/cmtsbfxgg00073b6r0i05f5ko@published"
-  class="image vossi-image  image__hide-placeholder"
-  data-image-variation="image"
-  data-name="CNN-Headlines-International-logo-v2.png"
-  data-component-name="image"
-  data-observe-resizes
-  data-breakpoints='{"image--eq-extra-small": 115, "image--eq-small": 300, "image--eq-large": 660}'
-  data-original-ratio="0.5625"
-  data-original-height="1080"
-  data-original-width="1920"
-  data-url="https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c&#x3D;original"
-  data-unselectable="true"
-    >
-      
-    <div class="image__container " data-image-variation="image"
-    data-breakpoints='{"image--eq-extra-small": 115, "image--eq-small": 300, "image--show-credits": 525}'>
-       <picture class="image__picture"><source type='image/webp' srcset='https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c=16x9&q=w_1280,c_fill/f_webp'><img src='https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c=16x9&q=w_1280,c_fill' alt='CNN-Headlines-International-logo-v2.png' class='image__dam-img image__dam-img--loading' onload='this.classList.remove(&apos;image__dam-img--loading&apos;)' onerror='imageLoadError(this)' height='1080' width='1920'/></picture>
-    </div>
-    
-    <div class="image__metadata"></div>
-    
-</div>
-
-        </div>
-    </div>
-</div>
-
                 <div class="video-resource__details">
                     <div data-editable="headline"  class="video-resource__headline inline-placeholder">Catch up on today&#x27;s global news
                 </div>
@@ -6374,26 +6248,6 @@ data-component-name="container">
         </span>
                     </div>
                 </div>
-        <template class="video-resource__cover__template">
-                    <div class="video-resource__cover" style="background-image:url(https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png?c&#x3D;16x9&amp;q&#x3D;h_540,w_960,c_fill)">
-        <div class="video-resource__overlay">
-            <div class="video-resource__controls">
-                <div class="video-resource__playhead spinner">
-                    <svg class="play-icon" width="100" height="100" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><path d="M19.15 55.34l30.07-20a4 4 0 0 0 0-6.66l-30.07-20A4 4 0 0 0 13 12.07v39.86a4 4 0 0 0 6.15 3.41z"/></svg>
-
-                </div>
-                <div class="video-resource__info">
-                    <div class="video-resource__chyron-wrapper invisible">
-                        <div class="video-resource__chyron">Catch up on today&#x27;s global news</div>
-                    </div>
-                    <div class="video-resource__runtime">         <span class="video-resource__source">
-        </span>
- </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        </template>
 </div>
 
         </div>
@@ -24995,7 +24849,7 @@ mountComponentModules();
     }
   }
   function tuneVideos(){
-    var vids=document.querySelectorAll('video');
+    var vids=document.querySelectorAll('video:not(.interactive-video__player):not(.cnn-top-video)');
     if(!('IntersectionObserver' in window)){
       vids.forEach(function(v){ try{ v.pause(); }catch(e){} });
       return;
@@ -25023,6 +24877,85 @@ mountComponentModules();
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', run); else run();
   window.addEventListener('load', function(){ setTimeout(run, 500); setTimeout(run, 2000); });
 })();
-</script></body>
+</script>
+<script id="CNN_TOP_VIDEO_KEEPALIVE_FIX">
+(function(){
+  var SEL = '.cnn-top-video';
+  function getVideo(){ return document.querySelector(SEL); }
+  function stoppedForNav(el){ return el && el.getAttribute('data-cnn-stop-for-nav') === '1'; }
+  function userPaused(el){ return el && el.getAttribute('data-cnn-user-paused') === '1'; }
+  function userMuted(el){ return el && el.getAttribute('data-cnn-user-muted') === '1'; }
+
+  function purgeForeignPlayers(){
+    var el = getVideo();
+    if(!el) return;
+    var holder = el.closest('.cnn-top-video-holder') || el.parentElement;
+    if(!holder) return;
+    holder.querySelectorAll('video').forEach(function(other){
+      if(other !== el){ try{ other.parentNode.removeChild(other); }catch(e){} }
+    });
+    holder.querySelectorAll('.fave-player-container,.bitmovinplayer-container,.theoplayer-container,[data-testid="VideoElement"],.pui,.pui_control-bar').forEach(function(n){
+      try{ n.parentNode.removeChild(n); }catch(e){}
+    });
+  }
+
+  function playVideo(forceSound){
+    var el = getVideo();
+    if(!el || stoppedForNav(el) || userPaused(el)) return;
+    purgeForeignPlayers();
+    if(forceSound && !userMuted(el)){ el.muted = false; el.volume = 1; }
+    if(!el.paused) return;
+    var p = el.play();
+    if(p && p.catch){
+      p.catch(function(){
+        // Autoplay with sound blocked: keep the picture running, offer sound button.
+        el.muted = true;
+        var p2 = el.play();
+        if(p2 && p2.catch) p2.catch(function(){});
+      });
+    }
+  }
+
+  function enableSound(){
+    var el = getVideo();
+    if(!el || stoppedForNav(el) || userPaused(el) || userMuted(el)) return;
+    purgeForeignPlayers();
+    el.muted = false;
+    el.volume = 1;
+    if(userPaused(el)) return;
+    var p = el.play();
+    if(p && p.catch) p.catch(function(){});
+  }
+
+  function init(){
+    var el = getVideo();
+    if(!el || el.dataset.cnnKeepaliveReady) return;
+    el.dataset.cnnKeepaliveReady = '1';
+    el.volume = 1;
+    purgeForeignPlayers();
+    playVideo(true);
+    el.addEventListener('pause', function(){ if(!stoppedForNav(el) && !userPaused(el)) setTimeout(function(){ playVideo(false); }, 0); });
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) playVideo(false); });
+    window.addEventListener('focus', function(){ playVideo(false); });
+    window.addEventListener('scroll', function(){ playVideo(false); }, { passive:true });
+    ['pointerdown','click','keydown','touchstart'].forEach(function(type){
+      document.addEventListener(type, function once(e){
+        var t = e && e.target;
+        if(t && t.closest && t.closest('.cnn-player-ui')) return;
+        document.removeEventListener(type, once, true);
+        enableSound();
+      }, true);
+    });
+    if(window.MutationObserver){
+      var holder = el.closest('.cnn-top-video-holder') || el.parentElement;
+      if(holder) new MutationObserver(purgeForeignPlayers).observe(holder,{childList:true,subtree:true});
+    }
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  window.addEventListener('load', init);
+})();
+</script><script id="CNN_PREMIUM_PLAYER_JS" defer src="/media/sites/js/cnn-premium-player.js"></script>
+</body>
 </html>
 

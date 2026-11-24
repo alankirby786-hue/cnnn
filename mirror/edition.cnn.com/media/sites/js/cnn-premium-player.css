@@ -1,0 +1,292 @@
+/* CNN premium video player UI. Scoped to mirrored player instances only. */
+.cnn-premium-player-shell {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  line-height: 0;
+  isolation: isolate;
+}
+.cnn-top-video-holder .cnn-premium-player-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.cnn-premium-player-shell > video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  line-height: normal;
+}
+.cnn-top-video-holder .cnn-premium-player-shell > video {
+  position: absolute;
+  inset: 0;
+}
+.cnn-premium-player-shell video::-webkit-media-controls,
+.cnn-premium-player-shell video::-webkit-media-controls-enclosure,
+.cnn-premium-player-shell video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+.cnn-player-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  color: #fff;
+  font-family: var(--theme-font-family, "CNN Sans Display", Helvetica, Arial, sans-serif);
+  line-height: 1;
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.cnn-player-ui::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 92px;
+  background: linear-gradient(to top, rgba(0,0,0,.86) 0%, rgba(0,0,0,.56) 48%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.cnn-player-ui.is-visible::before { opacity: 1; }
+
+.cnn-player-ui__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0,0,0,.54);
+  color: #fff;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.96);
+  transition: opacity .18s ease, transform .18s ease;
+  pointer-events: none;
+}
+.cnn-player-ui__center svg { width: 30px; height: 30px; }
+.cnn-player-ui[data-state="paused"] .cnn-player-ui__center {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.cnn-player-ui__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 2px solid rgba(255,255,255,.28);
+  border-top-color: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events: none;
+  animation: cnn-player-spin .75s linear infinite;
+}
+.cnn-player-ui[data-state="buffering"] .cnn-player-ui__spinner { opacity: 1; }
+.cnn-player-ui[data-state="buffering"] .cnn-player-ui__center { opacity: 0; }
+@keyframes cnn-player-spin { to { transform: rotate(360deg); } }
+
+.cnn-player-ui__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 10px 7px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .18s ease, transform .18s ease;
+  pointer-events: none;
+}
+.cnn-player-ui.is-visible .cnn-player-ui__bar {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.cnn-player-ui__progress-row {
+  height: 15px;
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+}
+.cnn-player-ui__progress {
+  position: relative;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+  touch-action: none;
+  outline: none;
+}
+.cnn-player-ui__progress::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  background: rgba(255,255,255,.32);
+  transform: translateY(-50%);
+}
+.cnn-player-ui__progress-buffer,
+.cnn-player-ui__progress-played {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 3px;
+  width: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.cnn-player-ui__progress-buffer { background: rgba(255,255,255,.24); }
+.cnn-player-ui__progress-played { background: #cc0000; }
+.cnn-player-ui__progress-knob {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.7);
+  transition: opacity .16s ease, transform .16s ease;
+  pointer-events: none;
+}
+.cnn-player-ui__progress:hover .cnn-player-ui__progress-knob,
+.cnn-player-ui__progress:focus-visible .cnn-player-ui__progress-knob,
+.cnn-player-ui__progress.is-dragging .cnn-player-ui__progress-knob {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.cnn-player-ui__progress:focus-visible::before { outline: 2px solid #fff; outline-offset: 3px; }
+.cnn-player-ui__progress.is-disabled { cursor: default; }
+
+.cnn-player-ui__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 32px;
+}
+.cnn-player-ui__group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  min-width: 0;
+}
+.cnn-player-ui__group--right { gap: 0; }
+.cnn-player-ui__btn {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .18s ease, opacity .18s ease;
+}
+.cnn-player-ui__btn:hover,
+.cnn-player-ui__btn:focus-visible { background: rgba(255,255,255,.15); }
+.cnn-player-ui__btn:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.cnn-player-ui__btn[hidden] { display: none !important; }
+.cnn-player-ui__btn svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cnn-player-ui__btn[data-action="toggle"] svg,
+.cnn-player-ui__center svg { stroke-width: 2.1; }
+.cnn-player-ui__time {
+  margin-left: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: .94;
+}
+.cnn-player-ui__time .cnn-player-ui__time-sep { margin: 0 4px; opacity: .55; }
+
+.cnn-player-ui__settings-menu {
+  position: absolute;
+  right: 8px;
+  bottom: 45px;
+  min-width: 164px;
+  max-height: calc(var(--cnn-player-height, 240px) - 52px);
+  padding: 4px;
+  overflow-y: auto;
+  background: rgba(0,0,0,.92);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: none;
+  pointer-events: auto;
+}
+.cnn-player-ui__settings-menu.is-open { display: block; }
+.cnn-player-ui__settings-label {
+  padding: 5px 8px 4px;
+  color: rgba(255,255,255,.62);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.cnn-player-ui__settings-menu button {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font: 500 12px/1.2 var(--theme-font-family, "CNN Sans Display", Helvetica, Arial, sans-serif);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .18s ease;
+}
+.cnn-player-ui__settings-menu button:hover,
+.cnn-player-ui__settings-menu button:focus-visible { background: rgba(255,255,255,.14); }
+.cnn-player-ui__settings-menu button:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.cnn-player-ui__settings-menu button[aria-checked="true"] { color: #ff5a5a; }
+
+#cnn-top-video-controls,
+#cnn-top-sound-btn { display: none !important; }
+
+@media (max-width: 640px) {
+  .cnn-player-ui__bar { padding: 0 8px 6px; }
+  .cnn-player-ui__btn { width: 34px; height: 34px; }
+  .cnn-player-ui__btn--secondary { display: none !important; }
+  .cnn-player-ui__time { margin-left: 2px; font-size: 12px; }
+  .cnn-player-ui__time-sep { margin: 0 2px; }
+  .cnn-player-ui__controls { gap: 3px; }
+  .cnn-player-ui__settings-menu { right: 6px; bottom: 43px; min-width: 156px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cnn-player-ui,
+  .cnn-player-ui::before,
+  .cnn-player-ui__bar,
+  .cnn-player-ui__center,
+  .cnn-player-ui__spinner,
+  .cnn-player-ui__btn,
+  .cnn-player-ui__progress-knob { transition-duration: .01ms !important; }
+}

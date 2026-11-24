@@ -10725,7 +10725,8 @@ mountComponentModules();
 
 <script id="CNN_ARTICLE_RENDER_FIX">
 (function(){
-  var HERO_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Edward_Jones_branch_ypsilanti.JPG/1280px-Edward_Jones_branch_ypsilanti.JPG';
+  var HERO_IMG = '/media/courthouse-escort.png';
+  var THUMB_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Edward_Jones_branch_ypsilanti.JPG/1280px-Edward_Jones_branch_ypsilanti.JPG';
   var PEAK_IMG = 'https://images.pexels.com/photos/6266311/pexels-photo-6266311.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200';
 
   function css(){
@@ -10838,8 +10839,8 @@ mountComponentModules();
       }
 
       var hero = el('figure','ar-hero');
-      var img = document.createElement('img'); img.src = HERO_IMG; img.alt = 'Edward Jones branch office'; img.loading='eager'; img.style.objectPosition='center 25%';
-      hero.appendChild(img); hero.appendChild(el('figcaption','ar-caption', 'An Edward Jones branch office. Real branch photo: Dwight Burdette/Wikimedia Commons (CC BY 3.0).'));
+      var img = document.createElement('img'); img.src = HERO_IMG; img.alt = 'Courthouse escort by NYPD officers'; img.loading='eager'; img.style.objectPosition='center 25%';
+      hero.appendChild(img); hero.appendChild(el('figcaption','ar-caption', 'Courthouse escort by NYPD officers.'));
       root.appendChild(hero);
 
       var layout = el('div','ar-layout'); var main = el('div','ar-body'); var side = el('aside','ar-sidebar'); layout.appendChild(main); layout.appendChild(side); root.appendChild(layout);
@@ -10900,7 +10901,7 @@ mountComponentModules();
         var rg=el('div','ar-related-grid');
         a.relatedStories.slice(0,4).forEach(function(rs,idx){
           var card=document.createElement('a'); card.className='ar-rel'; card.href=rs.href||'#';
-          var im=document.createElement('img'); im.src = idx%2===0?HERO_IMG:PEAK_IMG; im.alt=''; im.loading='lazy'; card.appendChild(im);
+          var im=document.createElement('img'); im.src = ['/media/article-related/related-bank.jpg','/media/article-related/related-crowd.jpg','/media/article-related/related-arrest.jpg','/media/article-related/related-investigation.jpg'][idx]; im.alt = ['Bank exterior','Crowd gathered outside','Police arrest','Police investigation'][idx]; im.loading='lazy'; card.appendChild(im);
           if(rs.tag) card.appendChild(el('span','ar-rel-tag',rs.tag + (rs.time?' \u2022 '+rs.time:'')));
           card.appendChild(el('span',null,rs.title||'Related story'));
           rg.appendChild(card);

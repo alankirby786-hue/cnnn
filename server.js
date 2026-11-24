@@ -80,7 +80,7 @@ function localFileForUrl(urlStr) {
   return path.join(MIRROR_ROOT, DEFAULT_HOST, p.replace(/^\//, ''));
 }
 
-function sendFile(res, filePath, statusCode = 200) {
+function sendFile(res, filePath, statusCode = 200, req = null) {
   let resolved = filePath;
   if (!fs.existsSync(resolved)) {
     // extensionless fallback -> index.html in same dir
@@ -95,12 +95,51 @@ function sendFile(res, filePath, statusCode = 200) {
   const ext = path.extname(resolved).toLowerCase();
   const isHtml = ext === '.html' || ext === '.htm';
   const isAsset = ['.css','.js','.mjs','.png','.jpg','.jpeg','.gif','.webp','.svg','.ico','.woff','.woff2','.ttf','.otf','.mp4','.webm','.json','.map'].includes(ext);
+  const isMedia = ext === '.mp4' || ext === '.webm';
   const cacheControl = isHtml ? 'no-cache' : (isAsset ? 'public, max-age=3600, stale-while-revalidate=86400' : 'public, max-age=300');
+  const size = fs.statSync(resolved).size;
   const headers = {
     'Content-Type': MIME[ext] || 'application/octet-stream',
     'Access-Control-Allow-Origin': '*',
-    'Cache-Control': cacheControl
+    'Cache-Control': cacheControl,
+    'Content-Length': size
   };
+  if (isMedia) headers['Accept-Ranges'] = 'bytes';
+
+  const rangeHeader = req && req.headers && req.headers.range;
+  if (isMedia && typeof rangeHeader === 'string') {
+    const m = /^bytes=(\d*)-(\d*)$/.exec(rangeHeader.trim());
+    if (m) {
+      let start;
+      let end;
+      if (m[1] === '') {
+        const suffix = parseInt(m[2], 10);
+        if (!isFinite(suffix) || suffix <= 0) {
+          res.writeHead(416, { 'Content-Range': `bytes */${size}` });
+          res.end();
+          return;
+        }
+        start = Math.max(0, size - suffix);
+        end = size - 1;
+      } else {
+        start = parseInt(m[1], 10);
+        end = m[2] === '' ? size - 1 : parseInt(m[2], 10);
+      }
+      if (!isFinite(start) || !isFinite(end) || start > end || start >= size) {
+        res.writeHead(416, { 'Content-Range': `bytes */${size}` });
+        res.end();
+        return;
+      }
+      end = Math.min(end, size - 1);
+      res.writeHead(206, Object.assign({}, headers, {
+        'Content-Range': `bytes ${start}-${end}/${size}`,
+        'Content-Length': end - start + 1
+      }));
+      fs.createReadStream(resolved, { start, end }).pipe(res);
+      return;
+    }
+  }
+
   res.writeHead(statusCode, headers);
   fs.createReadStream(resolved).pipe(res);
 }
@@ -200,7 +239,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     const filePath = localFileForUrl(reqUrl.href);
-    sendFile(res, filePath);
+    sendFile(res, filePath, 200, req);
   } catch (e) {
     res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
     res.end('500 ' + e.message);
