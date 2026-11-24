@@ -1,0 +1,53 @@
+{
+  "_id": "cnnReportStory.edward-jones-louisiana-investigation",
+  "_type": "cnnReportStory",
+  "headline": "Iranian-Linked Hackers Breach Edward Jones in Louisiana",
+  "dek": "Elderly Americans targeted in a campaign that began last month. Louisiana branches now under heavy FTC and IRS audit — with advisor Beau Wilson under investigation — as reported losses climb upwards of $1.3 billion.",
+  "advisorName": "Beau Wilson",
+  "location": "",
+  "byline": "Maya Chen and Jordan Hale",
+  "publishedDisplay": "August 16, 2026",
+  "updatedDisplay": "4:18 p.m. ET",
+  "lossesShort": "$1.3B+",
+  "lossesLong": "upwards of $1.3 billion",
+  "firmName": "Edward Jones",
+  "kicker": "Breaking",
+  "readTime": "8 min read",
+  "editorNote": "Developing report on alleged compromises involving Edward Jones in Louisiana, Iranian-linked hackers, and elderly U.S. targets. Advisor Beau Wilson is under investigation. Activity began last month. Reported losses: upwards of $1.3 billion. Affected branches are under heavy FTC and IRS audit. If you are facing something similar, do not be afraid, refrain from contacting advisors, and file with the FTC at ReportFraud.ftc.gov.",
+  "bottomLineHeading": "$1.3B. Report to the FTC.",
+  "bottomLineBody": "Iranian-linked hackers, Edward Jones in Louisiana, and a deliberate focus on elderly Americans — with advisor Beau Wilson under investigation, the campaign underway since last month, and losses climbing upwards of $1.3 billion. Those branches are under heavy FTC and IRS audit. If you are facing something similar, do not be afraid. Refrain from contacting advisors. File a report at the FTC instead.",
+  "protectBlurb": "Do not be afraid. Compromised Edward Jones branches are under heavy FTC and IRS audit. Advisor Beau Wilson is under investigation. Losses are upwards of $1.3 billion. Refrain from contacting advisors — file a report with the FTC instead.",
+  "guidanceBlurb": "Louisiana Edward Jones branches are under heavy FTC and IRS investigation. Advisor Beau Wilson is under probe after losses upwards of $1.3 billion.",
+  "heroCaption": "Authorities move in as the Louisiana Edward Jones probe widens — advisor Beau Wilson is among those under investigation.",
+  "newsletterBlurb": "Get updates when the FTC, IRS, or investigators issue new guidance for affected clients.",
+  "stats": [
+    { "_key": "stat-losses", "k": "Losses", "v": "$1.3B+" },
+    { "_key": "stat-firm", "k": "Firm", "v": "Edward Jones" },
+    { "_key": "stat-advisor", "k": "Under probe", "v": "Beau Wilson" },
+    { "_key": "stat-action", "k": "Action", "v": "File w/ FTC" }
+  ],
+  "tickerItems": [
+    "BREAKING: Edward Jones Louisiana branches compromised",
+    "Advisor Beau Wilson under investigation",
+    "Iranian-linked actors suspected in elder-targeted campaign",
+    "Reported losses upwards of $1.3 billion",
+    "FTC and IRS open heavy audits of affected branches",
+    "Officials urge clients: file with FTC — do not contact advisors"
+  ],
+  "relatedStories": [
+    { "_key": "rel-ftc", "tag": "Consumer Alert", "time": "5 min", "title": "How to file a strong FTC fraud report", "href": "#" },
+    { "_key": "rel-advisor", "tag": "Investigation", "time": "6 min", "title": "Who is Beau Wilson?", "href": "#" },
+    { "_key": "rel-losses", "tag": "Markets", "time": "7 min", "title": "Inside the $1.3 billion loss estimate", "href": "#" },
+    { "_key": "rel-guide", "tag": "Guides", "time": "4 min", "title": "Why seniors should skip advisor calls during a probe", "href": "#" }
+  ],
+  "scopeItems": [
+    "Edward Jones",
+    "Louisiana branches",
+    "Beau Wilson under investigation",
+    "Iranian-linked hackers",
+    "Elderly Americans targeted",
+    "Losses upwards of $1.3B",
+    "FTC & IRS audits ongoing",
+    "Report to FTC, not advisors"
+  ]
+}

@@ -10723,6 +10723,7 @@ mountComponentModules();
 
 
 
+<script id="CNN_SANITY_HYDRATE_JS" src="/media/sites/js/cnn-sanity-hydrate.js"></script>
 <script id="CNN_ARTICLE_RENDER_FIX">
 (function(){
   var HERO_IMG = '/media/courthouse-escort.png';
@@ -10800,9 +10801,12 @@ mountComponentModules();
   async function load(){
     css();
     try {
+      var hydrate = window.CNNSanityHydrate;
+      var sanity = hydrate && hydrate.load ? await hydrate.load() : null;
       var res = await fetch('/api/content');
       var data = await res.json();
-      var a = data.article || {};
+      var a = hydrate && hydrate.overlayArticle ? hydrate.overlayArticle(data.article || {}, sanity) : (data.article || {});
+      if(sanity && sanity.headline) document.title = sanity.headline + ' | CNN';
       var peak = {};
       try { peak = await (await fetch('/api/peak')).json(); } catch(_){ }
 
@@ -10821,6 +10825,11 @@ mountComponentModules();
       var pub = el('span'); pub.innerHTML = 'Published <strong>' + (a.published || 'August 16, 2026') + '</strong>'; meta.appendChild(pub);
       var upd = el('span'); upd.innerHTML = 'Updated <strong>' + (a.updated || a.updatedAt || '') + '</strong>'; meta.appendChild(upd);
       if(a.readTime){ var rt=el('span'); rt.innerHTML='Read time <strong>'+a.readTime+'</strong>'; meta.appendChild(rt); }
+      var location = sanity && String(sanity.location || '').trim();
+      if(location){
+        meta.appendChild(el('span', null, '|'));
+        var loc = el('span'); loc.innerHTML = '<strong>' + location + '</strong>'; meta.appendChild(loc);
+      }
       root.appendChild(meta);
 
       var alert = el('div','ar-alert');
@@ -10957,7 +10966,8 @@ mountComponentModules();
 
       var tags = el('div','ar-sidebox'); tags.appendChild(el('h2',null,'Related topics'));
       var tagw=document.createElement('div'); tagw.style.cssText='display:flex;flex-wrap:wrap;gap:8px';
-      ['Edward Jones','Louisiana','Cybersecurity','Elder fraud','FTC','IRS','Markets'].forEach(function(t){ var sp=document.createElement('span'); sp.textContent=t; sp.style.cssText='font-size:12px;font-weight:700;padding:6px 10px;border:1px solid #ddd;color:#333;background:#fafafa'; tagw.appendChild(sp); });
+      var scopeTags = (Array.isArray(a.scopeItems) && a.scopeItems.length) ? a.scopeItems : ['Edward Jones','Louisiana','Cybersecurity','Elder fraud','FTC','IRS','Markets'];
+      scopeTags.forEach(function(t){ var sp=document.createElement('span'); sp.textContent=t; sp.style.cssText='font-size:12px;font-weight:700;padding:6px 10px;border:1px solid #ddd;color:#333;background:#fafafa'; tagw.appendChild(sp); });
       tags.appendChild(tagw); side.appendChild(tags);
 
       function sideStoryCard(title, tag, imgSrc, href){
@@ -10997,6 +11007,8 @@ mountComponentModules();
       });
       nl.appendChild(nll); nl.appendChild(nli); nl.appendChild(nlb); nl.appendChild(nlm);
       side.appendChild(nl);
+
+      if(hydrate && hydrate.applyAll) hydrate.applyAll(root, sanity);
 
     } catch (e) {
       var root2 = document.getElementById('article-root');

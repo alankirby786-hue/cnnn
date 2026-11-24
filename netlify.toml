@@ -1,5 +1,11 @@
+"$schema" = "https://open-api.netlify.com/netlify.schema.json"
+
 [build]
   publish = "mirror/edition.cnn.com"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
 
 # Edge function applies to all routes in production. Configure env vars in Netlify UI.
 # Disabled for now to allow public access. Re-enable with proper env vars when ready.

@@ -1,0 +1,301 @@
+/* Hydrates display copy from the Sanity-backed /api/sanity-content function. */
+(function () {
+  'use strict';
+
+  if (window.__CNN_SANITY_HYDRATE_READY__) return;
+  window.__CNN_SANITY_HYDRATE_READY__ = true;
+
+  var ENDPOINT = '/api/sanity-content';
+
+  var FALLBACK = {
+    headline: 'Iranian-Linked Hackers Breach Edward Jones in Louisiana',
+    dek: 'Elderly Americans targeted in a campaign that began last month. Louisiana branches now under heavy FTC and IRS audit — with advisor Beau Wilson under investigation — as reported losses climb upwards of $1.3 billion.',
+    advisorName: 'Beau Wilson',
+    location: '',
+    byline: 'Maya Chen and Jordan Hale',
+    publishedDisplay: 'August 16, 2026',
+    updatedDisplay: '4:18 p.m. ET',
+    lossesShort: '$1.3B+',
+    lossesLong: 'upwards of $1.3 billion',
+    lossesLongDisplay: 'Upwards of $1.3 billion',
+    firmName: 'Edward Jones',
+    kicker: 'Breaking',
+    readTime: '8 min read',
+    editorNote: 'Developing report on alleged compromises involving Edward Jones in Louisiana, Iranian-linked hackers, and elderly U.S. targets. Advisor Beau Wilson is under investigation. Activity began last month. Reported losses: upwards of $1.3 billion. Affected branches are under heavy FTC and IRS audit. If you are facing something similar, do not be afraid, refrain from contacting advisors, and file with the FTC at ReportFraud.ftc.gov.',
+    bottomLineHeading: '$1.3B. Report to the FTC.',
+    bottomLineBody: 'Iranian-linked hackers, Edward Jones in Louisiana, and a deliberate focus on elderly Americans — with advisor Beau Wilson under investigation, the campaign underway since last month, and losses climbing upwards of $1.3 billion. Those branches are under heavy FTC and IRS audit. If you are facing something similar, do not be afraid. Refrain from contacting advisors. File a report at the FTC instead.',
+    protectBlurb: 'Do not be afraid. Compromised Edward Jones branches are under heavy FTC and IRS audit. Advisor Beau Wilson is under investigation. Losses are upwards of $1.3 billion. Refrain from contacting advisors — file a report with the FTC instead.',
+    guidanceBlurb: 'Louisiana Edward Jones branches are under heavy FTC and IRS investigation. Advisor Beau Wilson is under probe after losses upwards of $1.3 billion.',
+    heroCaption: 'Authorities move in as the Louisiana Edward Jones probe widens — advisor Beau Wilson is among those under investigation.',
+    newsletterBlurb: 'Get updates when the FTC, IRS, or investigators issue new guidance for affected clients.',
+    stats: [
+      { k: 'Losses', v: '$1.3B+' },
+      { k: 'Firm', v: 'Edward Jones' },
+      { k: 'Under probe', v: 'Beau Wilson' },
+      { k: 'Action', v: 'File w/ FTC' }
+    ],
+    tickerItems: [
+      'BREAKING: Edward Jones Louisiana branches compromised',
+      'Advisor Beau Wilson under investigation',
+      'Iranian-linked actors suspected in elder-targeted campaign',
+      'Reported losses upwards of $1.3 billion',
+      'FTC and IRS open heavy audits of affected branches',
+      'Officials urge clients: file with FTC — do not contact advisors'
+    ],
+    relatedStories: [
+      { tag: 'Consumer Alert', time: '5 min', title: 'How to file a strong FTC fraud report', href: '#' },
+      { tag: 'Investigation', time: '6 min', title: 'Who is Beau Wilson?', href: '#' },
+      { tag: 'Markets', time: '7 min', title: 'Inside the $1.3 billion loss estimate', href: '#' },
+      { tag: 'Guides', time: '4 min', title: 'Why seniors should skip advisor calls during a probe', href: '#' }
+    ],
+    scopeItems: [
+      'Edward Jones',
+      'Louisiana branches',
+      'Beau Wilson under investigation',
+      'Iranian-linked hackers',
+      'Elderly Americans targeted',
+      'Losses upwards of $1.3B',
+      'FTC & IRS audits ongoing',
+      'Report to FTC, not advisors'
+    ]
+  };
+
+  var LOAD_PROMISE = null;
+  var CURRENT = null;
+
+  function normalize(content) {
+    var merged = {};
+    Object.keys(FALLBACK).forEach(function (key) { merged[key] = FALLBACK[key]; });
+    if (content && typeof content === 'object') {
+      Object.keys(content).forEach(function (key) {
+        if (content[key] !== undefined && content[key] !== null) merged[key] = content[key];
+      });
+    }
+    return merged;
+  }
+
+  function load() {
+    if (!LOAD_PROMISE) {
+      LOAD_PROMISE = fetch(ENDPOINT, { cache: 'no-store' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('sanity content request failed: ' + response.status);
+          return response.json();
+        })
+        .then(function (content) {
+          CURRENT = normalize(content);
+          return CURRENT;
+        })
+        .catch(function () {
+          CURRENT = normalize(null);
+          return CURRENT;
+        });
+    }
+    return LOAD_PROMISE;
+  }
+
+  function getPath(object, path) {
+    try {
+      return path.split('.').reduce(function (value, key) {
+        return value === undefined || value === null ? undefined : value[key];
+      }, object);
+    } catch (_) {
+      return undefined;
+    }
+  }
+
+  function hide(node, shouldHide) {
+    if (!node) return;
+    node.hidden = !!shouldHide;
+    node.style.display = shouldHide ? 'none' : '';
+  }
+
+  function applyBindings(root, content) {
+    if (!root || !root.querySelectorAll) return;
+
+    var bound = root.querySelectorAll('[data-sanity]');
+    Array.prototype.forEach.call(bound, function (node) {
+      var key = node.getAttribute('data-sanity');
+      var value = getPath(content, key);
+      var text = value === undefined || value === null ? '' : String(value);
+      var template = node.getAttribute('data-sanity-template') || '{{value}}';
+      var output = template.replace(/\{\{\s*value\s*\}\}/g, text);
+      var attribute = node.getAttribute('data-sanity-attr');
+
+      if (attribute) node.setAttribute(attribute, output);
+      else node.textContent = output;
+
+      if (node.hasAttribute('data-sanity-hide-when-empty')) hide(node, !text);
+    });
+
+    var hideEmpty = root.querySelectorAll('[data-sanity-hide-when-empty]');
+    Array.prototype.forEach.call(hideEmpty, function (node) {
+      var key = node.getAttribute('data-sanity-hide-when-empty');
+      var value = getPath(content, key);
+      hide(node, !value && value !== 0);
+    });
+
+    if (document.body && document.body.hasAttribute('data-sanity-document-title')) {
+      document.title = content.headline ? 'CNN — ' + content.headline : document.title;
+    }
+  }
+
+  function escapeRegExp(value) {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function capFirst(value) {
+    var text = String(value || '');
+    return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
+  }
+
+  function caseLike(match, replacement) {
+    var text = String(replacement || '');
+    if (!text) return '';
+    if (match === match.toUpperCase() && /[A-Z]/.test(match)) return text.toUpperCase();
+    if (/^[A-Z]/.test(match) && !/^[A-Z]{2}/.test(match)) return capFirst(text);
+    return text;
+  }
+
+  function bareLoss(value) {
+    return String(value || '').replace(/\+/g, '');
+  }
+
+  function bareBillion(value) {
+    return String(value || '').replace(/^\s*upwards\s+of\s+/i, '');
+  }
+
+  function replacementRules(content) {
+    return [
+      { from: FALLBACK.dek, to: content.dek },
+      { from: FALLBACK.headline, to: content.headline },
+      { from: FALLBACK.byline, to: content.byline },
+      { from: FALLBACK.publishedDisplay, to: content.publishedDisplay },
+      { from: FALLBACK.updatedDisplay, to: content.updatedDisplay },
+      { from: 'Upwards of $1.3 billion', to: capFirst(content.lossesLong) },
+      { from: FALLBACK.lossesLong, to: content.lossesLong },
+      { from: '$1.3B+', to: content.lossesShort },
+      { from: '$1.3B', to: bareLoss(content.lossesShort) },
+      { from: '$1.3 billion', to: bareBillion(content.lossesLong) },
+      { from: FALLBACK.firmName, to: content.firmName },
+      { from: FALLBACK.advisorName, to: content.advisorName }
+    ].filter(function (rule) {
+      return rule.from && typeof rule.to === 'string' && rule.from !== rule.to;
+    });
+  }
+
+  function applyText(root, content) {
+    if (!root) return;
+    var rules = replacementRules(content);
+    if (!rules.length) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('script, style, noscript, [data-sanity-no-replace]')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function (node) {
+      var text = node.nodeValue;
+      rules.forEach(function (rule) {
+        if (text.indexOf(rule.from) === -1) return;
+        var pattern = new RegExp(escapeRegExp(rule.from), 'gi');
+        text = text.replace(pattern, function (match) { return caseLike(match, rule.to); });
+      });
+      if (text !== node.nodeValue) node.nodeValue = text;
+    });
+  }
+
+  function applyAll(root, content) {
+    var resolved = normalize(content || CURRENT || FALLBACK);
+    applyBindings(root, resolved);
+    applyText(root, resolved);
+    return resolved;
+  }
+
+  function overlayArticle(article, content) {
+    var sanity = normalize(content || CURRENT || FALLBACK);
+    var result = Object.assign({}, article || {});
+
+    result.kicker = sanity.kicker || result.kicker;
+    result.title = sanity.headline || result.title;
+    result.headline = sanity.headline || result.headline;
+    result.dek = sanity.dek || result.dek;
+    result.subhead = sanity.dek || result.subhead;
+    result.byline = sanity.byline || result.byline;
+    result.author = sanity.byline || result.author;
+    result.published = sanity.publishedDisplay || result.published;
+    result.updated = sanity.updatedDisplay || result.updated;
+    result.updatedAt = sanity.updatedDisplay || result.updatedAt;
+    result.readTime = sanity.readTime || result.readTime;
+    result.editorNote = sanity.editorNote || result.editorNote;
+    result.bottomLineHeading = sanity.bottomLineHeading || result.bottomLineHeading;
+    result.bottomLineBody = sanity.bottomLineBody || result.bottomLineBody;
+    result.protectBlurb = sanity.protectBlurb || result.protectBlurb;
+    result.guidanceBlurb = sanity.guidanceBlurb || result.guidanceBlurb;
+    result.heroCaption = sanity.heroCaption || result.heroCaption;
+    result.newsletterBlurb = sanity.newsletterBlurb || result.newsletterBlurb;
+    result.tickerItems = sanity.tickerItems && sanity.tickerItems.length ? sanity.tickerItems : result.tickerItems;
+    result.relatedStories = sanity.relatedStories && sanity.relatedStories.length ? sanity.relatedStories : result.relatedStories;
+    result.scopeItems = sanity.scopeItems && sanity.scopeItems.length ? sanity.scopeItems : result.scopeItems;
+
+    if (sanity.stats && sanity.stats.length) {
+      result.stats = sanity.stats.map(function (stat) {
+        return { k: stat.k || '', v: stat.v || '' };
+      });
+    }
+
+    if (Array.isArray(result.keyFacts)) {
+      result.keyFacts = result.keyFacts
+        .map(function (fact) {
+          var label = String(fact.label || '');
+          var copy = Object.assign({}, fact);
+          if (/firm/i.test(label)) copy.value = sanity.firmName;
+          if (/advisor/i.test(label)) copy.value = sanity.advisorName;
+          if (/loss/i.test(label)) copy.value = capFirst(sanity.lossesLong);
+          if (/location/i.test(label)) copy.value = sanity.location;
+          return copy;
+        })
+        .filter(function (fact) {
+          return !/location/i.test(String(fact.label || '')) || !!sanity.location;
+        });
+    }
+
+    return result;
+  }
+
+  var api = {
+    load: load,
+    applyBindings: applyBindings,
+    applyText: applyText,
+    applyAll: applyAll,
+    overlayArticle: overlayArticle
+  };
+
+  Object.defineProperty(api, 'current', {
+    get: function () { return CURRENT || FALLBACK; }
+  });
+
+  window.CNNSanityHydrate = api;
+
+  function init() {
+    var hasBindings = document.querySelector('[data-sanity], [data-sanity-hide-when-empty], [data-sanity-document-title]');
+    if (!hasBindings) return;
+
+    load().then(function (content) {
+      applyAll(document, content);
+      document.dispatchEvent(new CustomEvent('cnn-sanity:ready', { detail: content }));
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
