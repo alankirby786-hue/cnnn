@@ -32,26 +32,26 @@ Set these in the Netlify UI (Site configuration → Environment variables) or wi
 
 - `SANITY_PROJECT_ID` = `5758yrpf`
 - `SANITY_DATASET` = `production`
-- `SANITY_API_TOKEN` = optional; a fresh read token is needed only if `production` is private
+- `SANITY_API_TOKEN` = required read token; the `production` dataset is private and the token is already set as a Netlify secret
 
-The API token shared earlier now returns `Session not found`, so it is expired and must be replaced. The function uses `SANITY_API_TOKEN` when it is set and otherwise reads the public dataset. If the document is missing or reads are blocked, it serves the bundled fallback copy.
+The function uses `SANITY_API_TOKEN` for every read. If the document is missing or reads are blocked, it serves the bundled fallback copy. Never put the token in `netlify.toml`, source files, or git.
 
 The function caches responses at the Netlify CDN for 60 seconds with a 5-minute stale-while-revalidate window. After an edit, wait up to a minute or purge the cache, then reload the page.
 
 ## Seed the document
 
-The Studio can import `sanity/seed/cnnReportStory.json` directly, or you can run:
+The document is already seeded. To re-seed it, log in with the Sanity CLI and use the document command (this avoids API-token host issues):
 
 ```powershell
 cd sanity
 npm install
-$secure = Read-Host -AsSecureString -Prompt "Sanity token"
-$env:SANITY_API_TOKEN = [System.Net.NetworkCredential]::new('', $secure).Password
-node seed-story.mjs
+npx sanity login
+$env:SANITY_API_TOKEN = (Get-Content "$env:USERPROFILE\.config\sanity\config.json" -Raw | ConvertFrom-Json).authToken
+npx sanity documents create seed/cnnReportStory.json --replace
 Remove-Item Env:SANITY_API_TOKEN
 ```
 
-Never commit the token. The seed script reads it only from `process.env.SANITY_API_TOKEN`.
+Never print or commit the token. The CLI reads it from its local config only for this command.
 
 ## Edit content
 
