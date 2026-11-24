@@ -180,19 +180,15 @@ export default async function handler() {
   const dataset = envGet('SANITY_DATASET') || 'production';
   const token = envGet('SANITY_API_TOKEN');
 
-  if (!token) {
-    return jsonResponse({ ...normalizeStory(null), source: 'fallback' });
-  }
-
   try {
     const url = new URL(`https://${projectId}.api.sanity.io/v2024-01-01/data/query/${dataset}`);
     url.searchParams.set('query', GROQ_QUERY);
 
+    const headers: Record<string, string> = { Accept: 'application/json' };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
     const response = await fetch(url.toString(), {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`
-      },
+      headers,
       signal: AbortSignal.timeout(8000)
     });
 

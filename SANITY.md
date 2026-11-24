@@ -23,9 +23,9 @@ Set these in the Netlify UI (Site configuration → Environment variables) or wi
 
 - `SANITY_PROJECT_ID` = `5758yrpf`
 - `SANITY_DATASET` = `production`
-- `SANITY_API_TOKEN` = a Sanity token with read access to `production`
+- `SANITY_API_TOKEN` = optional; a fresh read token is needed only if `production` is private
 
-The API token was shared in chat earlier, so it should be revoked and replaced with a fresh token in Netlify. The function also works without it by serving the bundled fallback copy, but Sanity edits will not appear until a valid token is set.
+The API token was shared in chat earlier, so it should be revoked. The function uses `SANITY_API_TOKEN` when it is set and otherwise reads the public dataset. If the document is missing or reads are blocked, it serves the bundled fallback copy.
 
 The function caches responses at the Netlify CDN for 60 seconds with a 5-minute stale-while-revalidate window. After an edit, wait up to a minute or purge the cache, then reload the page.
 
