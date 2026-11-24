@@ -17,6 +17,15 @@ The URL `/markets/edward-jones-louisiana-investigation/` is unchanged.
 - Schema: `sanity/schemaTypes/cnnReportStory.ts`
 - Seed document: `sanity/seed/cnnReportStory.json`
 
+## Deployed Studio
+
+- Studio: https://cnn-report-sanity-studio.netlify.app
+- Sign in with a Sanity account that has access to project `5758yrpf`.
+- Create/edit the **CNN Report Story** document with ID `cnnReportStory.edward-jones-louisiana-investigation`.
+- After publishing, wait up to 60 seconds and reload the website.
+
+The Studio is a separate Netlify project from the website, so editing there cannot overwrite the mirrored site.
+
 ## Netlify environment variables
 
 Set these in the Netlify UI (Site configuration → Environment variables) or with the Netlify CLI. Do **not** put them in `netlify.toml` or any repository file.
@@ -25,7 +34,7 @@ Set these in the Netlify UI (Site configuration → Environment variables) or wi
 - `SANITY_DATASET` = `production`
 - `SANITY_API_TOKEN` = optional; a fresh read token is needed only if `production` is private
 
-The API token was shared in chat earlier, so it should be revoked. The function uses `SANITY_API_TOKEN` when it is set and otherwise reads the public dataset. If the document is missing or reads are blocked, it serves the bundled fallback copy.
+The API token shared earlier now returns `Session not found`, so it is expired and must be replaced. The function uses `SANITY_API_TOKEN` when it is set and otherwise reads the public dataset. If the document is missing or reads are blocked, it serves the bundled fallback copy.
 
 The function caches responses at the Netlify CDN for 60 seconds with a 5-minute stale-while-revalidate window. After an edit, wait up to a minute or purge the cache, then reload the page.
 
