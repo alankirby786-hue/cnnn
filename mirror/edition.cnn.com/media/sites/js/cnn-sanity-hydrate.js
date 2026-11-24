@@ -6,6 +6,7 @@
   window.__CNN_SANITY_HYDRATE_READY__ = true;
 
   var ENDPOINT = '/api/sanity-content';
+  var POLL_MS = 2000;
 
   var FALLBACK = {
     headline: 'Iranian-Linked Hackers Breach Edward Jones in Louisiana',
@@ -62,6 +63,9 @@
 
   var LOAD_PROMISE = null;
   var CURRENT = null;
+  var LAST_APPLIED = null;
+  var POLL_TIMER = null;
+  var POLLING = false;
 
   function normalize(content) {
     var merged = {};
@@ -74,13 +78,17 @@
     return merged;
   }
 
+  function fetchContent() {
+    return fetch(ENDPOINT + '?_=' + Date.now(), { cache: 'no-store' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('sanity content request failed: ' + response.status);
+        return response.json();
+      });
+  }
+
   function load() {
     if (!LOAD_PROMISE) {
-      LOAD_PROMISE = fetch(ENDPOINT, { cache: 'no-store' })
-        .then(function (response) {
-          if (!response.ok) throw new Error('sanity content request failed: ' + response.status);
-          return response.json();
-        })
+      LOAD_PROMISE = fetchContent()
         .then(function (content) {
           CURRENT = normalize(content);
           return CURRENT;
@@ -91,6 +99,30 @@
         });
     }
     return LOAD_PROMISE;
+  }
+
+  function refresh() {
+    return fetchContent()
+      .then(function (content) {
+        var next = normalize(content);
+        var previous = LAST_APPLIED || normalize(null);
+        CURRENT = next;
+        if (signature(next) !== signature(previous)) {
+          applyAll(document, next, previous);
+          LAST_APPLIED = next;
+          document.dispatchEvent(new CustomEvent('cnn-sanity:changed', {
+            detail: { previous: previous, content: next }
+          }));
+        }
+        return next;
+      })
+      .catch(function () {
+        return CURRENT || normalize(null);
+      });
+  }
+
+  function signature(content) {
+    try { return JSON.stringify(content); } catch (_) { return String(content); }
   }
 
   function getPath(object, path) {
@@ -164,28 +196,49 @@
     return String(value || '').replace(/^\s*upwards\s+of\s+/i, '');
   }
 
-  function replacementRules(content) {
-    return [
-      { from: FALLBACK.dek, to: content.dek },
-      { from: FALLBACK.headline, to: content.headline },
-      { from: FALLBACK.byline, to: content.byline },
-      { from: FALLBACK.publishedDisplay, to: content.publishedDisplay },
-      { from: FALLBACK.updatedDisplay, to: content.updatedDisplay },
-      { from: 'Upwards of $1.3 billion', to: capFirst(content.lossesLong) },
-      { from: FALLBACK.lossesLong, to: content.lossesLong },
-      { from: '$1.3B+', to: content.lossesShort },
-      { from: '$1.3B', to: bareLoss(content.lossesShort) },
-      { from: '$1.3 billion', to: bareBillion(content.lossesLong) },
-      { from: FALLBACK.firmName, to: content.firmName },
-      { from: FALLBACK.advisorName, to: content.advisorName }
-    ].filter(function (rule) {
-      return rule.from && typeof rule.to === 'string' && rule.from !== rule.to;
-    });
+  function flattenStrings(value, prefix, output) {
+    if (value === null || value === undefined) return;
+    if (typeof value === 'string') {
+      output[prefix] = value;
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach(function (item, index) {
+        flattenStrings(item, prefix ? prefix + '.' + index : String(index), output);
+      });
+      return;
+    }
+    if (typeof value === 'object') {
+      Object.keys(value).forEach(function (key) {
+        flattenStrings(value[key], prefix ? prefix + '.' + key : key, output);
+      });
+    }
   }
 
-  function applyText(root, content) {
+  function rulesBetween(previous, current) {
+    var from = {};
+    var to = {};
+    flattenStrings(previous || {}, '', from);
+    flattenStrings(current || {}, '', to);
+    var rules = [];
+    var seen = {};
+    Object.keys(from).forEach(function (path) {
+      if (!(path in to)) return;
+      var before = from[path];
+      var after = to[path];
+      if (typeof before !== 'string' || typeof after !== 'string') return;
+      if (before.length < 3 || before === after) return;
+      var key = before + '\u0000' + after;
+      if (seen[key]) return;
+      seen[key] = true;
+      rules.push({ from: before, to: after });
+    });
+    return rules;
+  }
+
+  function applyText(root, content, previous) {
     if (!root) return;
-    var rules = replacementRules(content);
+    var rules = rulesBetween(previous || FALLBACK, content);
     if (!rules.length) return;
 
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -214,10 +267,10 @@
     });
   }
 
-  function applyAll(root, content) {
+  function applyAll(root, content, previous) {
     var resolved = normalize(content || CURRENT || FALLBACK);
+    applyText(root, resolved, previous || FALLBACK);
     applyBindings(root, resolved);
-    applyText(root, resolved);
     return resolved;
   }
 
@@ -274,6 +327,7 @@
 
   var api = {
     load: load,
+    refresh: refresh,
     applyBindings: applyBindings,
     applyText: applyText,
     applyAll: applyAll,
@@ -286,13 +340,27 @@
 
   window.CNNSanityHydrate = api;
 
+  function startPolling() {
+    if (POLL_TIMER) return;
+    POLL_TIMER = window.setInterval(function () {
+      if (POLLING || document.hidden) return;
+      POLLING = true;
+      refresh().then(
+        function () { POLLING = false; },
+        function () { POLLING = false; }
+      );
+    }, POLL_MS);
+  }
+
   function init() {
-    var hasBindings = document.querySelector('[data-sanity], [data-sanity-hide-when-empty], [data-sanity-document-title]');
-    if (!hasBindings) return;
+    var hasTargets = document.querySelector('[data-sanity], [data-sanity-hide-when-empty], [data-sanity-document-title], #article-root');
+    if (!hasTargets) return;
 
     load().then(function (content) {
       applyAll(document, content);
+      LAST_APPLIED = content;
       document.dispatchEvent(new CustomEvent('cnn-sanity:ready', { detail: content }));
+      startPolling();
     });
   }
 

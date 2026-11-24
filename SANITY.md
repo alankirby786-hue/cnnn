@@ -21,8 +21,9 @@ The URL `/markets/edward-jones-louisiana-investigation/` is unchanged.
 
 - Studio: https://cnn-report-sanity-studio.netlify.app
 - Sign in with a Sanity account that has access to project `5758yrpf`.
+- The Studio origin is already allowlisted in Sanity CORS with credentials enabled. If you deploy Studio to a different URL, run `npx sanity cors add <studio-url> --credentials` in `sanity/`.
 - Create/edit the **CNN Report Story** document with ID `cnnReportStory.edward-jones-louisiana-investigation`.
-- After publishing, wait up to 60 seconds and reload the website.
+- After publishing, the open website updates automatically within about 2 seconds.
 
 The Studio is a separate Netlify project from the website, so editing there cannot overwrite the mirrored site.
 
@@ -36,7 +37,7 @@ Set these in the Netlify UI (Site configuration → Environment variables) or wi
 
 The function uses `SANITY_API_TOKEN` for every read. If the document is missing or reads are blocked, it serves the bundled fallback copy. Never put the token in `netlify.toml`, source files, or git.
 
-The function caches responses at the Netlify CDN for 60 seconds with a 5-minute stale-while-revalidate window. After an edit, wait up to a minute or purge the cache, then reload the page.
+The function disables CDN and browser caching, and every page polls `/api/sanity-content` every 2 seconds. A published Studio edit appears on an already-open page within about 2 seconds; no manual reload or cache purge is needed.
 
 ## Seed the document
 

@@ -168,8 +168,9 @@ function jsonResponse(payload: any) {
     status: 200,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'public, max-age=0, must-revalidate',
-      'Netlify-CDN-Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+      'Netlify-CDN-Cache-Control': 'no-store',
+      'Pragma': 'no-cache',
       'Access-Control-Allow-Origin': '*'
     }
   });
@@ -189,6 +190,7 @@ export default async function handler() {
 
     const response = await fetch(url.toString(), {
       headers,
+      cache: 'no-store',
       signal: AbortSignal.timeout(8000)
     });
 
