@@ -12,7 +12,10 @@ if (!token) {
 const projectId = process.env.SANITY_PROJECT_ID || '5758yrpf'
 const dataset = process.env.SANITY_DATASET || 'production'
 const here = dirname(fileURLToPath(import.meta.url))
-const document = JSON.parse(readFileSync(join(here, 'seed', 'cnnReportStory.json'), 'utf8'))
+const documents = [
+  JSON.parse(readFileSync(join(here, 'seed', 'globalArticleInformation.json'), 'utf8')),
+  JSON.parse(readFileSync(join(here, 'seed', 'cnnReportStory.json'), 'utf8'))
+]
 
 const response = await fetch(
   `https://${projectId}.api.sanity.io/v2024-01-01/data/mutate/${dataset}`,
@@ -23,7 +26,7 @@ const response = await fetch(
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
-      mutations: [{ createOrReplace: document }]
+      mutations: documents.map((document) => ({ createOrReplace: document }))
     })
   }
 )
@@ -35,5 +38,5 @@ if (!response.ok) {
 }
 
 const result = await response.json()
-console.log(`Seeded ${document._id} into ${projectId}/${dataset}.`)
-console.log(`Document IDs: ${(result.documents || []).join(', ') || document._id}`)
+console.log(`Seeded ${documents.map((document) => document._id).join(', ')} into ${projectId}/${dataset}.`)
+console.log(`Document IDs: ${(result.documents || []).join(', ') || documents.map((document) => document._id).join(', ')}`)

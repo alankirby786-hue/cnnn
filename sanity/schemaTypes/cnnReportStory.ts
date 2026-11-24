@@ -27,7 +27,8 @@ export default defineType({
       title: 'Headline',
       type: 'string',
       group: 'editorial',
-      description: 'Updates the homepage card and the article page start.',
+      description:
+        'Use {{firmName}}, {{location}}, {{advisorName}} and other tokens. Values come from Global Article Information.',
       validation: (Rule) => Rule.required()
     }),
     defineField({
@@ -36,7 +37,8 @@ export default defineType({
       type: 'text',
       rows: 3,
       group: 'editorial',
-      description: 'Updates the homepage card, article page start, and matching summary copy.',
+      description:
+        'Use shared-value tokens instead of typing names, dates, times or loss figures.',
       validation: (Rule) => Rule.required()
     }),
     defineField({
@@ -44,59 +46,6 @@ export default defineType({
       title: 'Byline',
       type: 'string',
       group: 'editorial',
-      validation: (Rule) => Rule.required()
-    }),
-    defineField({
-      name: 'publishedDisplay',
-      title: 'Published (display)',
-      type: 'string',
-      group: 'editorial',
-      description: 'Shown exactly as typed, e.g. August 16, 2026.'
-    }),
-    defineField({
-      name: 'updatedDisplay',
-      title: 'Updated (display)',
-      type: 'string',
-      group: 'editorial',
-      description: 'Shown exactly as typed, e.g. 4:18 p.m. ET.'
-    }),
-    defineField({
-      name: 'advisorName',
-      title: 'Advisor under investigation',
-      type: 'string',
-      group: 'editorial',
-      description: 'Replaces every occurrence of the advisor name in visible story copy.',
-      validation: (Rule) => Rule.required()
-    }),
-    defineField({
-      name: 'firmName',
-      title: 'Firm name',
-      type: 'string',
-      group: 'editorial',
-      description: 'Replaces every occurrence of the firm name in visible story copy.',
-      validation: (Rule) => Rule.required()
-    }),
-    defineField({
-      name: 'location',
-      title: 'Location',
-      type: 'string',
-      group: 'editorial',
-      description: 'Leave blank to hide location labels and separators.'
-    }),
-    defineField({
-      name: 'lossesShort',
-      title: 'Losses (short)',
-      type: 'string',
-      group: 'editorial',
-      description: 'Used in stat cards and short headings, e.g. $1.3B+.',
-      validation: (Rule) => Rule.required()
-    }),
-    defineField({
-      name: 'lossesLong',
-      title: 'Losses (long)',
-      type: 'string',
-      group: 'editorial',
-      description: 'Used in prose, e.g. upwards of $1.3 billion.',
       validation: (Rule) => Rule.required()
     }),
     defineField({

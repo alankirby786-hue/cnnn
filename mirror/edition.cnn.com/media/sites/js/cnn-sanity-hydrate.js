@@ -12,11 +12,16 @@
     headline: 'Iranian-Linked Hackers Breach Edward Jones in Louisiana',
     dek: 'Elderly Americans targeted in a campaign that began last month. Louisiana branches now under heavy FTC and IRS audit — with advisor Beau Wilson under investigation — as reported losses climb upwards of $1.3 billion.',
     advisorName: 'Beau Wilson',
-    location: '',
+    location: 'Louisiana',
     byline: 'Maya Chen and Jordan Hale',
+    publishedDate: 'August 16, 2026',
     publishedDisplay: 'August 16, 2026',
-    updatedDisplay: '4:18 p.m. ET',
+    updatedTime: '4:18 PM ET',
+    updatedDisplay: '4:18 PM ET',
+    totalLosses: '$1.3B+',
     lossesShort: '$1.3B+',
+    lossesCompact: '$1.3B',
+    lossesBillion: '$1.3 billion',
     lossesLong: 'upwards of $1.3 billion',
     lossesLongDisplay: 'Upwards of $1.3 billion',
     firmName: 'Edward Jones',
@@ -43,6 +48,7 @@
       'FTC and IRS open heavy audits of affected branches',
       'Officials urge clients: file with FTC — do not contact advisors'
     ],
+    tickerLine: 'BREAKING: Edward Jones Louisiana branches compromised // Advisor Beau Wilson under investigation // Iranian-linked actors suspected in elder-targeted campaign // Reported losses upwards of $1.3 billion // FTC and IRS open heavy audits of affected branches // Officials urge clients: file with FTC — do not contact advisors //\u00a0\u00a0\u00a0\u00a0',
     relatedStories: [
       { tag: 'Consumer Alert', time: '5 min', title: 'How to file a strong FTC fraud report', href: '#' },
       { tag: 'Investigation', time: '6 min', title: 'Who is Beau Wilson?', href: '#' },
@@ -312,6 +318,7 @@
     result.heroCaption = sanity.heroCaption || result.heroCaption;
     result.newsletterBlurb = sanity.newsletterBlurb || result.newsletterBlurb;
     result.tickerItems = sanity.tickerItems && sanity.tickerItems.length ? sanity.tickerItems : result.tickerItems;
+    result.tickerLine = sanity.tickerLine || result.tickerLine;
     result.relatedStories = sanity.relatedStories && sanity.relatedStories.length ? sanity.relatedStories : result.relatedStories;
     result.scopeItems = sanity.scopeItems && sanity.scopeItems.length ? sanity.scopeItems : result.scopeItems;
 

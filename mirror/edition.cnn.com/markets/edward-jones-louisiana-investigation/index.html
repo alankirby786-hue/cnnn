@@ -10817,7 +10817,7 @@ mountComponentModules();
 
       var breadcrumb = el('div','ar-breadcrumb'); breadcrumb.innerHTML = '<a href="/">Home</a> / <a href="/">Business</a> / <span>Markets</span>'; root.appendChild(breadcrumb);
       root.appendChild(el('div','ar-kicker', a.kicker || a.section || 'Markets'));
-      root.appendChild(el('h1','ar-headline', a.title || a.headline || 'Edward Jones Louisiana investigation'));
+      root.appendChild(el('h1','ar-headline', a.title || a.headline || 'Article'));
       root.appendChild(el('p','ar-subhead', a.dek || a.subhead || ''));
 
       var meta = el('div','ar-meta');
@@ -10825,11 +10825,6 @@ mountComponentModules();
       var pub = el('span'); pub.innerHTML = 'Published <strong>' + (a.published || 'August 16, 2026') + '</strong>'; meta.appendChild(pub);
       var upd = el('span'); upd.innerHTML = 'Updated <strong>' + (a.updated || a.updatedAt || '') + '</strong>'; meta.appendChild(upd);
       if(a.readTime){ var rt=el('span'); rt.innerHTML='Read time <strong>'+a.readTime+'</strong>'; meta.appendChild(rt); }
-      var location = sanity && String(sanity.location || '').trim();
-      if(location){
-        meta.appendChild(el('span', null, '|'));
-        var loc = el('span'); loc.innerHTML = '<strong>' + location + '</strong>'; meta.appendChild(loc);
-      }
       root.appendChild(meta);
 
       var alert = el('div','ar-alert');
@@ -10966,7 +10961,7 @@ mountComponentModules();
 
       var tags = el('div','ar-sidebox'); tags.appendChild(el('h2',null,'Related topics'));
       var tagw=document.createElement('div'); tagw.style.cssText='display:flex;flex-wrap:wrap;gap:8px';
-      var scopeTags = (Array.isArray(a.scopeItems) && a.scopeItems.length) ? a.scopeItems : ['Edward Jones','Louisiana','Cybersecurity','Elder fraud','FTC','IRS','Markets'];
+      var scopeTags = (Array.isArray(a.scopeItems) && a.scopeItems.length) ? a.scopeItems : [];
       scopeTags.forEach(function(t){ var sp=document.createElement('span'); sp.textContent=t; sp.style.cssText='font-size:12px;font-weight:700;padding:6px 10px;border:1px solid #ddd;color:#333;background:#fafafa'; tagw.appendChild(sp); });
       tags.appendChild(tagw); side.appendChild(tags);
 
@@ -10991,7 +10986,8 @@ mountComponentModules();
       var visual = el('div','ar-sidebox'); visual.appendChild(el('h2',null,'In focus'));
       var vf=document.createElement('figure'); vf.style.cssText='margin:0';
       var vi=document.createElement('img'); vi.src='https://upload.wikimedia.org/wikipedia/commons/b/b5/Dcis_agent1.jpg'; vi.alt='Federal agents investigating cybercrime'; vi.loading='eager'; vi.style.cssText='width:100%;display:block;aspect-ratio:4/5;object-fit:cover;object-position:center;background:#f2f2f2';
-      var vc=document.createElement('figcaption'); vc.textContent='DCIS special agents investigate cybercrime. Photo: Wikimedia Commons (CC0/public domain). Illustration only, not from the reported Louisiana case.'; vc.style.cssText='font-size:13px;line-height:1.5;color:#555;padding-top:10px';
+      var captionLocation = sanity && String(sanity.location || '').trim();
+      var vc=document.createElement('figcaption'); vc.textContent='DCIS special agents investigate cybercrime. Photo: Wikimedia Commons (CC0/public domain). Illustration only, not from the reported ' + (captionLocation || 'case') + ' case.'; vc.style.cssText='font-size:13px;line-height:1.5;color:#555;padding-top:10px';
       vf.appendChild(vi); vf.appendChild(vc); visual.appendChild(vf); side.appendChild(visual);
 
       var nl = el('div','ar-sidebox ar-newsletter');
@@ -11008,7 +11004,7 @@ mountComponentModules();
       nl.appendChild(nll); nl.appendChild(nli); nl.appendChild(nlb); nl.appendChild(nlm);
       side.appendChild(nl);
 
-      if(hydrate && hydrate.applyAll) hydrate.applyAll(root, sanity);
+      if(hydrate && hydrate.applyAll) hydrate.applyAll(root, sanity, null, true);
 
     } catch (e) {
       var root2 = document.getElementById('article-root');

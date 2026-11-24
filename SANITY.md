@@ -63,12 +63,17 @@ npm install
 npm run dev
 ```
 
-Edit the **CNN Report Story** document. The key fields are:
+Edit **Global Article Information** first. It is the single source of truth for the six shared values:
 
-- `headline` — homepage card and article start;
-- `dek` — homepage card, article start, and summary copy;
-- `byline`, `publishedDisplay`, `updatedDisplay` — article start metadata;
-- `advisorName`, `firmName`, `lossesShort`, `lossesLong` — repeated across visible story copy;
-- `location` — leave empty to hide location labels and separators.
+- `advisorName` — `Beau Wilson`
+- `location` — `Louisiana`
+- `publishedDate` — `August 16, 2026`
+- `updatedTime` — `4:18 PM ET`
+- `totalLosses` — `$1.3B+`
+- `firmName` — `Edward Jones`
 
-The homepage article card headline/dek are bound to the same document, and its link already points to `/markets/edward-jones-louisiana-investigation/`. Values such as `firmName`, `advisorName`, and loss figures are substituted everywhere they appear, including inside the bound homepage headline and article copy. The renderer overlays these values onto the existing `/api/content` feed, then replaces remaining visible occurrences on the mirrored pages. Video sources and playback behavior are not touched.
+Publishing a change there updates the homepage article preview, the full article page, the breaking page, and every repeated occurrence of those values. The standalone duplicate location label is intentionally hidden; the location inside story copy is driven by the global field.
+
+The **CNN Report Story** document now holds only story-specific copy. Its headline, dek, blurbs and recurring blocks use tokens such as `{{firmName}}`, `{{location}}`, `{{advisorName}}`, `{{publishedDate}}`, `{{updatedTime}}` and `{{lossesShort}}`. Do not type the shared values directly into those fields.
+
+The homepage card link remains `/markets/edward-jones-louisiana-investigation/`. The renderer overlays the global values onto the existing `/api/content` feed, then replaces remaining visible occurrences on the mirrored pages. Video sources and playback behavior are not touched.
