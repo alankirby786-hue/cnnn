@@ -117,7 +117,7 @@ async function main(){
     }
     // 11 authorized article request
     {
-      const r = await req('/markets/edward-jones-louisiana-investigation', { headers: { 'User-Agent': 'Mozilla/5.0 TestBrowser', 'Cookie': loginRes.cookie } });
+      const r = await req('/markets/live-news-update', { headers: { 'User-Agent': 'Mozilla/5.0 TestBrowser', 'Cookie': loginRes.cookie } });
       record('11. Authorized article request -> loads', r.status === 200 && r.body.toLowerCase().includes('edward jones'), `status=${r.status}`);
     }
     // 12 authorized image/static request - check a known static asset path pattern

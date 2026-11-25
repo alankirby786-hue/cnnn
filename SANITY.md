@@ -7,7 +7,7 @@ One Sanity document drives:
 - repeated display copy across the mirrored article and breaking pages (firm, advisor, losses, stat cards, ticker, tags);
 - the shared Netlify Function response at `/api/sanity-content`.
 
-The URL `/markets/edward-jones-louisiana-investigation/` is unchanged.
+The URL `/markets/live-news-update/` is unchanged.
 
 ## Project details
 
@@ -76,4 +76,4 @@ Publishing a change there updates the homepage article preview, the full article
 
 The **CNN Report Story** document now holds only story-specific copy. Its headline, dek, blurbs and recurring blocks use tokens such as `{{firmName}}`, `{{location}}`, `{{advisorName}}`, `{{publishedDate}}`, `{{updatedTime}}` and `{{lossesShort}}`. Do not type the shared values directly into those fields.
 
-The homepage card link remains `/markets/edward-jones-louisiana-investigation/`. The renderer overlays the global values onto the existing `/api/content` feed, then replaces remaining visible occurrences on the mirrored pages. Video sources and playback behavior are not touched.
+The homepage card link remains `/markets/live-news-update/`. The renderer overlays the global values onto the existing `/api/content` feed, then replaces remaining visible occurrences on the mirrored pages. Video sources and playback behavior are not touched.

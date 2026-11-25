@@ -14,6 +14,18 @@
 #   path = "/*"
 
 [[redirects]]
+  from = "/markets/edward-jones-louisiana-investigation"
+  to = "/markets/live-news-update/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/markets/edward-jones-louisiana-investigation/*"
+  to = "/markets/live-news-update/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/api/content"
   to = "https://cnn-news-live.netlify.app/api/content"
   status = 200
