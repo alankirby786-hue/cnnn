@@ -91,6 +91,21 @@
     } catch (_) {}
   }
 
+  function reveal() {
+    try {
+      var cloak = document.getElementById('sanity-cloak');
+      if (cloak && cloak.parentNode) cloak.parentNode.removeChild(cloak);
+    } catch (_) {}
+  }
+
+  // Failsafe: never leave Sanity-bound content hidden. Apply best available content first.
+  setTimeout(function () {
+    if (document.getElementById('sanity-cloak')) {
+      try { applyAll(document, CURRENT || readCache() || FALLBACK, FALLBACK, true); } catch (_) {}
+      reveal();
+    }
+  }, 8000);
+
   function normalize(content) {
     var merged = {};
     Object.keys(FALLBACK).forEach(function (key) { merged[key] = FALLBACK[key]; });
@@ -103,7 +118,7 @@
   }
 
   function fetchContent() {
-    return fetch(ENDPOINT + '?_=' + Date.now(), { cache: 'no-store' })
+    return fetch(ENDPOINT + '?_=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(8000) })
       .then(function (response) {
         if (!response.ok) throw new Error('sanity content request failed: ' + response.status);
         return response.json();
@@ -399,9 +414,12 @@
 
   function init() {
     var hasTargets = document.querySelector('[data-sanity], [data-sanity-hide-when-empty], [data-sanity-document-title], #article-root');
-    if (!hasTargets) return;
+    if (!hasTargets) {
+      reveal();
+      return;
+    }
 
-    // Apply last known good content immediately to avoid hardcoded stale flash.
+    // Pre-apply last known good content while hidden; reveal only after fresh network apply.
     var cached = readCache();
     if (cached) {
       applyAll(document, cached, FALLBACK, true);
@@ -417,8 +435,11 @@
         applyAll(document, content, FALLBACK, true);
       }
       LAST_APPLIED = content;
+      reveal();
       document.dispatchEvent(new CustomEvent('cnn-sanity:ready', { detail: content }));
       startPolling();
+    }).catch(function () {
+      reveal();
     });
   }
 
