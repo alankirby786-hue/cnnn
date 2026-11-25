@@ -419,12 +419,14 @@
       return;
     }
 
-    // Pre-apply last known good content while hidden; reveal only after fresh network apply.
+    // Apply last known Sanity content immediately to avoid blank/disappear on refresh.
+    // First-ever visit (no cache) stays cloaked until fresh apply to prevent hardcoded flash.
     var cached = readCache();
     if (cached) {
       applyAll(document, cached, FALLBACK, true);
       LAST_APPLIED = cached;
       CURRENT = CURRENT || cached;
+      reveal();
     }
 
     load().then(function (content) {
