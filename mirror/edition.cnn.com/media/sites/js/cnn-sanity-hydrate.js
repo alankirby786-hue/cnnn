@@ -72,6 +72,24 @@
   var LAST_APPLIED = null;
   var POLL_TIMER = null;
   var POLLING = false;
+  var CACHE_KEY = 'cnn-sanity-content-v1';
+
+  function readCache() {
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? normalize(parsed) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeCache(content) {
+    try {
+      if (window.localStorage) window.localStorage.setItem(CACHE_KEY, JSON.stringify(content));
+    } catch (_) {}
+  }
 
   function normalize(content) {
     var merged = {};
@@ -97,22 +115,27 @@
       LOAD_PROMISE = fetchContent()
         .then(function (content) {
           CURRENT = normalize(content);
+          writeCache(CURRENT);
           return CURRENT;
         })
         .catch(function () {
-          CURRENT = normalize(null);
+          CURRENT = readCache() || normalize(null);
           return CURRENT;
         });
     }
     return LOAD_PROMISE;
   }
 
+  // Start network fetch as early as possible to reduce first-paint flash.
+  load();
+
   function refresh() {
     return fetchContent()
       .then(function (content) {
         var next = normalize(content);
-        var previous = LAST_APPLIED || normalize(null);
         CURRENT = next;
+        writeCache(next);
+        var previous = LAST_APPLIED || normalize(null);
         if (signature(next) !== signature(previous)) {
           applyAll(document, next, previous, true);
           LAST_APPLIED = next;
@@ -123,7 +146,7 @@
         return next;
       })
       .catch(function () {
-        return CURRENT || normalize(null);
+        return CURRENT || readCache() || normalize(null);
       });
   }
 
@@ -378,8 +401,21 @@
     var hasTargets = document.querySelector('[data-sanity], [data-sanity-hide-when-empty], [data-sanity-document-title], #article-root');
     if (!hasTargets) return;
 
+    // Apply last known good content immediately to avoid hardcoded stale flash.
+    var cached = readCache();
+    if (cached) {
+      applyAll(document, cached, FALLBACK, true);
+      LAST_APPLIED = cached;
+      CURRENT = CURRENT || cached;
+    }
+
     load().then(function (content) {
-      applyAll(document, content, FALLBACK, true);
+      var previous = LAST_APPLIED || cached || FALLBACK;
+      if (signature(content) !== signature(previous)) {
+        applyAll(document, content, previous, true);
+      } else if (!LAST_APPLIED) {
+        applyAll(document, content, FALLBACK, true);
+      }
       LAST_APPLIED = content;
       document.dispatchEvent(new CustomEvent('cnn-sanity:ready', { detail: content }));
       startPolling();
