@@ -280,7 +280,7 @@ function jsonResponse(payload: any) {
 }
 
 export default async function handler() {
-  const projectId = envGet('SANITY_PROJECT_ID') || '5758yrpf';
+  const projectId = envGet('SANITY_PROJECT_ID') || 'pve0abvu';
   const dataset = envGet('SANITY_DATASET') || 'production';
   const token = envGet('SANITY_API_TOKEN');
 

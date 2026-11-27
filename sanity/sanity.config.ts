@@ -6,7 +6,7 @@ import globalArticleInformation from './schemaTypes/globalArticleInformation'
 export default defineConfig({
   name: 'cnn-report-content',
   title: 'CNN Report Content',
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID || '5758yrpf',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'pve0abvu',
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   plugins: [
     structureTool({
