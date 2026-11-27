@@ -300,19 +300,7 @@
       });
     }
 
-    // Poll content only when tab visible
-    var interval = null;
-    function startPoll(){
-      if (interval) return;
-      interval = setInterval(function(){
-        if (document.hidden) return;
-        fetch('/api/content').catch(function(){});
-      }, 10000);
-    }
-    function stopPoll(){ if (interval){ clearInterval(interval); interval=null; } }
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) stopPoll(); else startPoll(); });
-    startPoll();
-    window.addEventListener('beforeunload', stopPoll);
+    // No background polling: content is hydrated from /api/sanity-content by cnn-sanity-hydrate.js.
   })();
 </script>
 <script id="CNN_SANITY_HYDRATE_JS" defer src="/media/sites/js/cnn-sanity-hydrate.js"></script>
