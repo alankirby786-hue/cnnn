@@ -10805,12 +10805,10 @@ mountComponentModules();
     try {
       var hydrate = window.CNNSanityHydrate;
       var sanity = hydrate && hydrate.load ? await hydrate.load() : null;
-      var res = await fetch('/api/content');
-      var data = await res.json();
-      var a = hydrate && hydrate.overlayArticle ? hydrate.overlayArticle(data.article || {}, sanity) : (data.article || {});
+      // Fast path: build article directly from Sanity content (no slow external /api/content fetch).
+      var a = hydrate && hydrate.overlayArticle ? hydrate.overlayArticle({}, sanity) : (sanity || {});
       if(sanity && sanity.headline) document.title = sanity.headline + ' | CNN';
       var peak = {};
-      try { peak = await (await fetch('/api/peak')).json(); } catch(_){ }
 
       var root = document.getElementById('article-root');
       if(!root){ root = document.querySelector('.layout__content-wrapper'); if(root) root.innerHTML=''; }
