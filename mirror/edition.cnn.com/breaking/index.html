@@ -307,7 +307,7 @@
       interval = setInterval(function(){
         if (document.hidden) return;
         fetch('/api/content').catch(function(){});
-      }, 400);
+      }, 10000);
     }
     function stopPoll(){ if (interval){ clearInterval(interval); interval=null; } }
     document.addEventListener('visibilitychange', function(){ if (document.hidden) stopPoll(); else startPoll(); });
